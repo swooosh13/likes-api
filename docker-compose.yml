@@ -1,0 +1,25 @@
+version: '3.9'
+
+services:
+  app:
+    container_name: goapp
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+  #   depends_on:
+  #     - mongodb
+  # mongodb:
+  #   image: mongo:4.4-bionic
+  #   container_name: mongodb
+  #   environment:
+  #     - MONGODATADIR=/data/db
+  #     - MONGO_LOG_DIR=/dev/null
+  #     - MONGODB_DATABASE=exampledb
+  #     - MONGO_INITDB_ROOT_USERNAME=admin
+  #     - MONGO_INITDB_ROOT_PASSWORD=1234
+  #   volumes:
+  #     - ./.data/mongodb:/data/db
+  #   ports:
+  #     - "27018:27017"
