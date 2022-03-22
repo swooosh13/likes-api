@@ -2,8 +2,11 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
+	"proj1/internal/config"
+	"proj1/pkg/logger"
 )
 
 type ErrorResponse struct {
@@ -12,6 +15,8 @@ type ErrorResponse struct {
 }
 
 func main() {
+	logger.Init()
+	logger.Info("Check logger zap", )
 	http.HandleFunc("/", func(rw http.ResponseWriter, r *http.Request) {
 
 		mp := map[string]struct {
@@ -40,7 +45,8 @@ func main() {
 		_, _ = rw.Write(jsonData)
 	})
 
-	err := http.ListenAndServe("127.0.0.1:9000", nil)
+	cfg := config.GetConfig()
+	err := http.ListenAndServe(fmt.Sprintf("%s:%s", cfg.App.BindIP, cfg.App.Port), nil)
 	if err != nil {
 		log.Fatal("server has been crashed")
 	}
