@@ -7,6 +7,8 @@ import (
 	"net/http"
 	"proj1/internal/config"
 	"proj1/pkg/logger"
+
+	"go.uber.org/zap"
 )
 
 type ErrorResponse struct {
@@ -16,7 +18,10 @@ type ErrorResponse struct {
 
 func main() {
 	logger.Init()
-	logger.Info("Check logger zap", )
+	logger.Info("Check logger zap", zap.String("infomsg", "<value of string>"))
+	// logger.Fatal("Check logger zap", zap.String("fatalmsg", "<value of string>"))
+	logger.Error("Check logger zap", zap.String("errormsg", "<value of string>"))
+	logger.Debug("Check logger zap", zap.String("debugmsg", "<value of string>"))
 	http.HandleFunc("/", func(rw http.ResponseWriter, r *http.Request) {
 
 		mp := map[string]struct {
