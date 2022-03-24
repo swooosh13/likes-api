@@ -1,17 +1,18 @@
 package config
 
 import (
-	"log"
+	"fmt"
+	"proj1/pkg/logger"
 	"sync"
 
-	"github.com/ilyakaznacheev/cleanenv"
+	"github.com/spf13/viper"
 )
 
 type Config struct {
 	IsDebug *bool `yaml:"is_debug"`
 	App     struct {
-		BindIP string `yaml:"bind_ip"`
-		Port   string `yaml:"port"`
+		Port string `yaml:"port"`
+		Host string `yaml:"host"`
 	} `yaml:"app"`
 	PgDB struct {
 		Host     string `yaml:"host"`
@@ -26,13 +27,19 @@ var once sync.Once
 
 func GetConfig() *Config {
 	once.Do(func() {
-		log.Println("Read config")
+		viper.SetConfigName("local")
+		viper.SetConfigType("yaml")
+		viper.AddConfigPath("./configs")
+		err := viper.ReadInConfig()
+		if err != nil {
+			logger.Fatal(fmt.Sprint("Fatal error config file: %w \n", err))
+		}
+
 		instance = &Config{}
 
-		if err := cleanenv.ReadConfig("configs/local.yml", instance); err != nil {
-			help, _ := cleanenv.GetDescription(instance, nil)
-			log.Println(help)
-			log.Fatal(err)
+		err = viper.Unmarshal(instance)
+		if err != nil {
+			logger.Fatal(fmt.Sprint("Fatal parse config: %w \n", err))
 		}
 	})
 
