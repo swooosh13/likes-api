@@ -10,15 +10,17 @@ import (
 
 type Config struct {
 	IsDebug *bool `yaml:"is_debug"`
-	App     struct {
+	Listen  struct {
 		Port string `yaml:"port"`
 		Host string `yaml:"host"`
 	} `yaml:"app"`
-	PgDB struct {
+	PostgresDB struct {
 		Host     string `yaml:"host"`
 		Port     string `yaml:"port"`
 		Username string `yaml:"username"`
 		Password string `yaml:"password"`
+		DBname string `yaml:"dbname"`
+		Timeout int `yaml:"timeout"`
 	} `yaml:"pgdb"`
 }
 
@@ -28,11 +30,11 @@ var once sync.Once
 func GetConfig() *Config {
 	once.Do(func() {
 		viper.SetConfigName("local")
-		viper.SetConfigType("yaml")
+		viper.SetConfigType("yml")
 		viper.AddConfigPath("./configs")
 		err := viper.ReadInConfig()
 		if err != nil {
-			logger.Fatal(fmt.Sprint("Fatal error config file: %w \n", err))
+			logger.Fatal(fmt.Sprint("fatal error config file: %w \n", err))
 		}
 
 		instance = &Config{}
