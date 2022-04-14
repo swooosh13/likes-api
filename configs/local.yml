@@ -1,13 +1,14 @@
-is_debug: true
+version: '3.9'
 
-app:
-  host: "localhost"
-  port: "9000"
+listen:
+  host: 127.0.0.1
+  port: 9001
 
-pgdb:
-  host: "localhost"
-  port: "5432"
-  username: "postgres"
-  password: "1234"
-  dbname: "coins"
+pg_db:
+  host: "127.0.0.1"
+  port: 5432
+  username: admin
+  password: pwd123
+  database: likes
   timeout: 10
+  max_conns: 5

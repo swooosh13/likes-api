@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+	"path/filepath"
 	"proj1/pkg/logger"
 	"sync"
 
@@ -9,19 +10,19 @@ import (
 )
 
 type Config struct {
-	IsDebug *bool `yaml:"is_debug"`
-	Listen  struct {
-		Port string `yaml:"port"`
-		Host string `yaml:"host"`
-	} `yaml:"app"`
+	Listen struct {
+		Host string `mapstructure:"host"`
+		Port string `mapstructure:"port"`
+	} `mapstructure:"listen"`
 	PostgresDB struct {
-		Host     string `yaml:"host"`
-		Port     string `yaml:"port"`
-		Username string `yaml:"username"`
-		Password string `yaml:"password"`
-		DBname string `yaml:"dbname"`
-		Timeout int `yaml:"timeout"`
-	} `yaml:"pgdb"`
+		Host     string `mapstructure:"host"`
+		Port     string `mapstructure:"port"`
+		Username string `mapstructure:"username"`
+		Password string `mapstructure:"password"`
+		Database string `mapstructure:"database"`
+		Timeout  int    `mapstructure:"timeout"`
+		MaxConns int    `mapstructure:"max_conns"`
+	} `mapstructure:"pg_db"`
 }
 
 var instance *Config
@@ -29,19 +30,27 @@ var once sync.Once
 
 func GetConfig() *Config {
 	once.Do(func() {
-		viper.SetConfigName("local")
+		var configName string
+		configName = "local"
+
+		viper.SetConfigName(configName)
 		viper.SetConfigType("yml")
-		viper.AddConfigPath("./configs")
-		err := viper.ReadInConfig()
+
+		dirPath, err := filepath.Abs("./configs")
 		if err != nil {
-			logger.Fatal(fmt.Sprint("fatal error config file: %w \n", err))
+			logger.Fatal(fmt.Sprintf("fatal error config dir: %s \n", err))
+		}
+		viper.AddConfigPath(dirPath)
+		err = viper.ReadInConfig()
+		if err != nil {
+			logger.Fatal(fmt.Sprintf("fatal error config file, dir path: %s, error: %s \n", err, dirPath))
 		}
 
 		instance = &Config{}
 
 		err = viper.Unmarshal(instance)
 		if err != nil {
-			logger.Fatal(fmt.Sprint("Fatal parse config: %w \n", err))
+			logger.Fatal(fmt.Sprintf("fatal parse config: %s \n", err))
 		}
 	})
 
