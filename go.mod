@@ -3,17 +3,20 @@ module proj1
 go 1.18
 
 require (
+	github.com/go-chi/chi v1.5.4
+	github.com/jackc/pgconn v1.11.0
 	github.com/jackc/pgx/v4 v4.15.0
 	github.com/lib/pq v1.10.2
 	github.com/spf13/viper v1.11.0
+	github.com/swooosh13/auth-service v0.0.0-20220331114108-4ba04763aa6f
 	go.uber.org/zap v1.21.0
 )
 
 require (
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible // indirect
 	github.com/fsnotify/fsnotify v1.5.1 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/jackc/chunkreader/v2 v2.0.1 // indirect
-	github.com/jackc/pgconn v1.11.0 // indirect
 	github.com/jackc/pgio v1.0.0 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgproto3/v2 v2.2.0 // indirect

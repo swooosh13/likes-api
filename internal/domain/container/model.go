@@ -1,9 +1,16 @@
 package container
 
-import "proj1/internal/domain/item"
-
 type Container struct {
-	ID    string      `json:"id"`
-	Name  string      `json:"name"`
-	Items []item.Item `json:"items"`
+	ID     int             `json:"id"`
+	UserId int             `json:"user_id"`
+	Name   string          `json:"name"`
+	Items  []ContainerItem `json:"items"`
+}
+
+type ContainerItem struct {
+	ID          int    `json:"id"`
+	ContainerId int    `json:"container_id"`
+	Name        string `json:"name"`
+	Symbol      string `json:"symbol"`
+	Priority    int    `json:"priority"`
 }

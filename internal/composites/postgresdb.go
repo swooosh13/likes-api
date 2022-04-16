@@ -3,7 +3,7 @@ package composites
 import (
 	"context"
 	"database/sql"
-	"proj1/pkg/postgresdb"
+	"proj1/pkg/pgdb"
 
 	"github.com/jackc/pgx/v4/pgxpool"
 )
@@ -13,13 +13,13 @@ type PostgresDBComposite struct {
 }
 
 func NewPostgresDBComposite(ctx context.Context, host, port, username, password, database string, timeout, maxConns int) (*PostgresDBComposite, error) {
-	poolConfig, err := postgresdb.NewPoolConfig(host, port, username, password, database, timeout)
+	poolConfig, err := pgdb.NewPoolConfig(host, port, username, password, database, timeout)
 	if err != nil {
 		return nil, err
 	}
 
 	poolConfig.MaxConns = int32(maxConns)
-	c, err := postgresdb.NewConnection(poolConfig)
+	c, err := pgdb.NewConnection(poolConfig)
 	if err != nil {
 		return nil, err
 	}
