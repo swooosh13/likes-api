@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"os"
 	"os/signal"
@@ -32,7 +33,7 @@ func main() {
 	logger.Info("container composite initializing")
 
 	server := &http.Server{
-		Addr:    ":8000",
+		Addr:    fmt.Sprintf("%s:%s", cfg.Listen.Host, cfg.Listen.Port),
 		Handler: service(containerComposite.Handler),
 	}
 

@@ -1,0 +1,16 @@
+name: docker compose test
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  test:
+    runs-on: ubuntu-18.04
+    steps:
+    - name: checkout
+      uses: actions/checkout@v2
+    - name: create folder volume for db
+      run: mkdir -p ./.data
+    - name: Build the stack
+      run: docker-compose up -d

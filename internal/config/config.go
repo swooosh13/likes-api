@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+	"os"
 	"path/filepath"
 	"proj1/pkg/logger"
 	"sync"
@@ -32,6 +33,11 @@ func GetConfig() *Config {
 	once.Do(func() {
 		var configName string
 		configName = "local"
+		if confType := os.Getenv("NODE_ENV"); confType != "" {
+			configName = confType
+		}
+
+		fmt.Println(configName)
 
 		viper.SetConfigName(configName)
 		viper.SetConfigType("yml")
