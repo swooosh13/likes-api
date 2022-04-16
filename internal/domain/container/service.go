@@ -22,6 +22,10 @@ func (s *service) FindAll(ctx context.Context) ([]Container, error) {
 	return s.storage.FindAll(ctx)
 }
 
-func (s *service) FindUserContainers(ctx context.Context, userId int) ([]Container, error) {
+func (s *service) FindUserContainers(ctx context.Context, userId string) ([]Container, error) {
 	return s.storage.FindUserContainers(ctx, userId)
+}
+
+func (s *service) Delete(ctx context.Context, containerId int) error {
+	return s.storage.Delete(ctx, containerId)
 }

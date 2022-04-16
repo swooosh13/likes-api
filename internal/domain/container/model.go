@@ -2,7 +2,7 @@ package container
 
 type Container struct {
 	ID     int             `json:"id"`
-	UserId int             `json:"user_id"`
+	UserId string          `json:"user_id"`
 	Name   string          `json:"name"`
 	Items  []ContainerItem `json:"items"`
 }

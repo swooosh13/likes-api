@@ -5,7 +5,7 @@ create table container
     id      serial
         constraint container_pk
             primary key,
-    user_id int not null,
+    user_id varchar not null,
     name    varchar(40)
 );
 

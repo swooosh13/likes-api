@@ -1,7 +1,7 @@
 package container
 
 type CreateContainerDTO struct {
-	UserId int    `json:"user_id"`
+	UserId string `json:"user_id"`
 	Name   string `json:"name"`
 }
 

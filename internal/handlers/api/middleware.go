@@ -18,12 +18,13 @@ func Authentication(next http.Handler) http.Handler {
 			}
 
 			claims, err := token.ValidateToken(clientToken)
+
 			if err != "" {
 				http.Error(w, fmt.Sprintf("Invalid token: %s", err), http.StatusInternalServerError)
 				return
 			}
 
-			ctx := context.WithValue(r.Context(), "login", claims.Login)
+			ctx := context.WithValue(r.Context(), "UID", claims.Uid)
 			next.ServeHTTP(w, r.WithContext(ctx))
 		},
 	)

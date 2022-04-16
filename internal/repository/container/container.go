@@ -50,7 +50,7 @@ func (r *repository) FindAll(ctx context.Context) (cs []container.Container, err
 	return cs, nil
 }
 
-func (r *repository) FindUserContainers(ctx context.Context, userId int) ([]container.Container, error) {
+func (r *repository) FindUserContainers(ctx context.Context, userId string) ([]container.Container, error) {
 	q := `
 		SELECT id, user_id, name FROM public.container WHERE user_id = $1;
 	`
@@ -102,6 +102,39 @@ func (r *repository) Create(ctx context.Context, createContainerDTO *container.C
 			logger.Error(newErr.Error())
 			return err
 		}
+	}
+
+	return nil
+}
+
+func (r *repository) Delete(ctx context.Context, containerId int) error {
+	q := `
+		DELETE FROM container_item WHERE container_id IN (SELECT id FROM container WHERE id = $1);
+	`
+
+	fmt.Println(containerId)
+	tx, err := r.client.Begin(ctx)
+	if err != nil {
+		return err
+	}
+
+	_, err = tx.Exec(ctx, q, containerId)
+	if err != nil {
+		tx.Rollback(ctx)
+		return nil
+	}
+
+	q = `DELETE FROM container WHERE id = $1;`
+
+	_, err = tx.Exec(ctx, q, containerId)
+	if err != nil {
+		tx.Rollback(ctx)
+		return nil
+	}
+
+	err = tx.Commit(ctx)
+	if err != nil {
+		return err
 	}
 
 	return nil

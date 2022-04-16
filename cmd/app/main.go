@@ -71,6 +71,7 @@ func main() {
 
 func service(handlers ...api.Handler) http.Handler {
 	r := chi.NewMux()
+	r.Use(api.Authentication)
 	for _, v := range handlers {
 		v.Register(r)
 	}
