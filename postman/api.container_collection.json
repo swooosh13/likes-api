@@ -1,0 +1,104 @@
+{
+	"info": {
+		"_postman_id": "3e1e84c4-96b2-47e9-b50b-ec4e4cd9d864",
+		"name": "api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "ping",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": null
+			},
+			"response": []
+		},
+		{
+			"name": "GetAll",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": null
+			},
+			"response": []
+		},
+		{
+			"name": "CreateContainer",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJMb2dpbiI6ImFydGJsY2sxOSIsIlVpZCI6IjYyNGIxY2ZjOGVhMzM4NDhmNmJiNDUyMyIsImV4cCI6MTY1MDE5MDk3M30.IAbYXRv4C8Dauxf11TtM4OenTe6Z5t1eDjsPpWBGKkY",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"losers\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/container/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"container",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetMyContainers",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000"
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteContainer",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJMb2dpbiI6ImFydGJsY2sxOSIsIlVpZCI6IjYyNGIxY2ZjOGVhMzM4NDhmNmJiNDUyMyIsImV4cCI6MTY1MDIwNDEzMH0.9iyeEi6rdzJ7NpRHhXr1KG9XRhf_qOBp8O8ntycPmAc",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8000/container/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"container",
+						"1"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
