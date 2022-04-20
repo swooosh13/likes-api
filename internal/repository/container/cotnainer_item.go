@@ -33,30 +33,15 @@ func (r *repository) AddItemToContainer(ctx context.Context, createItemDTO *cont
 	return nil
 }
 
-func (r *repository) FindContainerItems(ctx context.Context, containerId int) ([]container.ContainerItem, error) {
+func (r *repository) DeleteItem(ctx context.Context, itemId int) error {
 	q := `
-		SELECT id, container_id, name, symbol, priority FROM container_item WHERE container_id = $1;
+		DELETE FROM container_item WHERE id = $1
 	`
 
-	items := make([]container.ContainerItem, 0)
-	rows, err := r.client.Query(ctx, q, containerId)
+	_, err := r.client.Exec(ctx, q, itemId)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	for rows.Next() {
-		var c container.ContainerItem
-		err = rows.Scan(&c.ID, &c.ContainerId, &c.Name, &c.Symbol, &c.Priority)
-		if err != nil {
-			return nil, fmt.Errorf("error in scan: %s", err.Error())
-		}
-
-		items = append(items, c)
-	}
-
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-
-	return items, nil
+	return nil
 }

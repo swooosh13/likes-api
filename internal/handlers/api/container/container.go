@@ -23,9 +23,19 @@ func NewHandler(service container.Service) api.Handler {
 
 func (h *handler) Register(r *chi.Mux) {
 	r.Route("/container", func(r chi.Router) {
-		r.Get("/", h.GetAll)
+		r.Get("/", h.FindUserContainers)
 		r.Post("/", h.CreateContainer)
+		r.Get("/{id}", h.GetContainerItems)
 		r.Delete("/{id}", h.DeleteContainer)
+		r.Put("/{id}", h.UpdateContainer)
+
+		r.Route("/{id}/items", func(r chi.Router) {
+			r.Get("/", func(w http.ResponseWriter, r *http.Request) {
+				w.Write([]byte("oke"))
+			})
+			r.Delete("/{item-id}", h.DeleteItem)
+			r.Post("/", h.AddItemToContainer)
+		})
 	})
 }
 
@@ -102,4 +112,49 @@ func (h *handler) DeleteContainer(w http.ResponseWriter, r *http.Request) {
 	}
 
 	return
+}
+
+func (h *handler) UpdateContainer(w http.ResponseWriter, r *http.Request) {
+	containerId, _ := strconv.Atoi(chi.URLParam(r, "id"))
+
+	b, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		http.Error(w, "invalid parse body method", http.StatusBadRequest)
+		return
+	}
+
+	var updateContainerDTO container.UpdateContainerDTO
+	err = json.Unmarshal(b, &updateContainerDTO)
+	if err != nil {
+		http.Error(w, "invalid unmarshalling body", http.StatusBadRequest)
+		return
+	}
+
+	err = h.service.UpdateContainer(context.Background(), &updateContainerDTO, containerId)
+
+	return
+}
+
+func (h *handler) GetContainerItems(w http.ResponseWriter, r *http.Request) {
+	containerId, _ := strconv.Atoi(chi.URLParam(r, "id"))
+	userId := r.Context().Value("UID").(string)
+
+	var cs []container.ContainerItem
+
+	cs, err := h.service.GetContainerItems(context.Background(), userId, containerId)
+	if err != nil {
+		http.Error(w, "error when get container`s items", http.StatusInternalServerError)
+		return
+	}
+
+	jsonData, err := json.Marshal(cs)
+	if err != nil {
+		http.Error(w, "error parsing container`s items", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(jsonData)
+	return
+
 }

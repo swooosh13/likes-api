@@ -1,5 +1,8 @@
 package container
 
+type UpdateContainerDTO struct {
+	Name string `json:"name"`
+}
 type CreateContainerDTO struct {
 	UserId string `json:"user_id"`
 	Name   string `json:"name"`

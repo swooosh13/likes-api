@@ -3,7 +3,7 @@ package container
 import "context"
 
 type service struct {
-	storage Service
+	storage Storage
 }
 
 func NewService(storage Storage) Service {
@@ -28,4 +28,12 @@ func (s *service) FindUserContainers(ctx context.Context, userId string) ([]Cont
 
 func (s *service) Delete(ctx context.Context, containerId int) error {
 	return s.storage.Delete(ctx, containerId)
+}
+
+func (s *service) UpdateContainer(ctx context.Context, updateContainerDTO *UpdateContainerDTO, containerId int) error {
+	return s.storage.UpdateContainer(ctx, updateContainerDTO, containerId)
+}
+
+func (s *service) GetContainerItems(ctx context.Context, userId string, containerId int) ([]ContainerItem, error) {
+	return s.storage.GetContainerItems(ctx, userId, containerId)
 }

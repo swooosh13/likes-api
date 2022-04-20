@@ -37,8 +37,6 @@ func GetConfig() *Config {
 			configName = confType
 		}
 
-		fmt.Println(configName)
-
 		viper.SetConfigName(configName)
 		viper.SetConfigType("yml")
 

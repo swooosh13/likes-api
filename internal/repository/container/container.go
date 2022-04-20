@@ -68,8 +68,9 @@ func (r *repository) FindUserContainers(ctx context.Context, userId string) ([]c
 			return nil, err
 		}
 
-		items, err := r.FindContainerItems(ctx, c.ID)
+		items, err := r.GetContainerItems(ctx, userId, c.ID)
 		if err != nil {
+			fmt.Println("err", err.Error())
 			return nil, err
 		}
 		c.Items = items
@@ -112,7 +113,6 @@ func (r *repository) Delete(ctx context.Context, containerId int) error {
 		DELETE FROM container_item WHERE container_id IN (SELECT id FROM container WHERE id = $1);
 	`
 
-	fmt.Println(containerId)
 	tx, err := r.client.Begin(ctx)
 	if err != nil {
 		return err
@@ -138,4 +138,47 @@ func (r *repository) Delete(ctx context.Context, containerId int) error {
 	}
 
 	return nil
+}
+
+func (r *repository) UpdateContainer(ctx context.Context, updateContainerDTO *container.UpdateContainerDTO, containerId int) error {
+	q := `
+		UPDATE container SET name = $1 WHERE id = $2;
+	`
+
+	fmt.Println(q, containerId, updateContainerDTO)
+
+	_, err := r.client.Exec(ctx, q, updateContainerDTO.Name, containerId)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r *repository) GetContainerItems(ctx context.Context, userId string, containerId int) ([]container.ContainerItem, error) {
+	q := `
+		SELECT ci.id, ci.container_id, ci.name, ci.symbol, ci.priority
+		FROM container_item as ci join container as c on ci.container_id = c.id
+		WHERE c.id = $1 AND c.user_id = $2;
+	`
+
+	var items []container.ContainerItem
+	rows, err := r.client.Query(ctx, q, containerId, userId)
+	if err != nil {
+		fmt.Println("this - 1")
+		return nil, err
+	}
+
+	for rows.Next() {
+		var item container.ContainerItem
+		err = rows.Scan(&item.ID, &item.ContainerId, &item.Name, &item.Symbol, &item.Priority)
+		if err != nil {
+			fmt.Println("this - 2")
+			return nil, err
+		}
+
+		items = append(items, item)
+	}
+
+	return items, nil
 }
