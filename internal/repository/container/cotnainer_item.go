@@ -40,7 +40,7 @@ func (r *repository) DeleteItem(ctx context.Context, itemId int) error {
 
 	_, err := r.client.Exec(ctx, q, itemId)
 	if err != nil {
-		return err
+		return fmt.Errorf("error when delete item handler query: %s; %w", q, err)
 	}
 
 	return nil

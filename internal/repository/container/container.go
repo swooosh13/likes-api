@@ -58,20 +58,19 @@ func (r *repository) FindUserContainers(ctx context.Context, userId string) ([]c
 	cs := make([]container.Container, 0)
 	rows, err := r.client.Query(ctx, q, userId)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("FindUserContainers error while querying: %s; %w", q, err)
 	}
 
 	for rows.Next() {
 		var c container.Container
 		err = rows.Scan(&c.ID, &c.UserId, &c.Name)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("FindUserContainers error while scanning: %v; %w", c, err)
 		}
 
 		items, err := r.GetContainerItems(ctx, userId, c.ID)
 		if err != nil {
-			fmt.Println("err", err.Error())
-			return nil, err
+			return nil, fmt.Errorf("FindUserContainers error while GetContainerItems; %w", err)
 		}
 		c.Items = items
 
@@ -79,7 +78,7 @@ func (r *repository) FindUserContainers(ctx context.Context, userId string) ([]c
 	}
 
 	if err := rows.Err(); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("FindUserContainers rows error: %w", err)
 	}
 
 	return cs, nil
@@ -165,7 +164,6 @@ func (r *repository) GetContainerItems(ctx context.Context, userId string, conta
 	var items []container.ContainerItem
 	rows, err := r.client.Query(ctx, q, containerId, userId)
 	if err != nil {
-		fmt.Println("this - 1")
 		return nil, err
 	}
 
@@ -173,7 +171,6 @@ func (r *repository) GetContainerItems(ctx context.Context, userId string, conta
 		var item container.ContainerItem
 		err = rows.Scan(&item.ID, &item.ContainerId, &item.Name, &item.Symbol, &item.Priority)
 		if err != nil {
-			fmt.Println("this - 2")
 			return nil, err
 		}
 
